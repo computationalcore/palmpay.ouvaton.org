@@ -7,7 +7,7 @@
 }
 @media screen and (max-width: 991px) {
   .testimonialbox {
-    margin-bottom: 250px;
+   /* margin-bottom: 250px;*/
   }
 }
 
@@ -46,6 +46,15 @@
   .box-video {
     padding-left: 0 !important;
   }
+  .carousel-indicators {
+    margin-top: 50px;
+    position: relative !important;
+  }
+  .testimoniesBox {
+    margin-bottom: 80px;
+    padding: 40px 0;
+}
+
 }
 
 @media screen and (min-width: 991px) {
@@ -55,6 +64,8 @@
   }
 }
 
+
 .margin-5 {
   padding: 3rem;
 }
+

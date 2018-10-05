@@ -78,7 +78,6 @@ class TestimoniesSection extends React.Component {
             <Col lg="6"
               style={{
                 border: '1px solid #128f52',
-                paddingTop: '10px',
                 paddingLeft: '0'
             }} className ="testimoniesBox">
               <Carousel

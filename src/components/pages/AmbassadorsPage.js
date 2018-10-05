@@ -52,7 +52,7 @@ const mapsStyles = {
 
 const columnData = [
   { id: 'nickname', numeric: false, disablePadding: true, label: 'Nickname' },
-  { id: 'location', numeric: false, disablePadding: true, label: 'BTS Account' },
+  { id: 'location', numeric: false, disablePadding: true, label: 'Location' },
   { id: 'telegram', numeric: false, disablePadding: false, label: 'Telegram Account' },
   { id: 'keybase', numeric: false, disablePadding: false, label: 'Keybase' },
   { id: 'email', numeric: false, disablePadding: false, label: 'Email' },

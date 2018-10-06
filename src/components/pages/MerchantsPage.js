@@ -186,7 +186,7 @@ class MerchantsPage extends Component {
       <div>
         <AppHeader />
 
-      <section data-spy="scroll" data-target="#mainNav" id="services">
+      <section data-spy="scroll" data-target="#mainNav" id="services" className="merchants_services" >
       <div className="containerfix">
       <div className="row">
       <div className="col-md-10 mx-md-auto">

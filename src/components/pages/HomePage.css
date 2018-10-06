@@ -69,3 +69,6 @@
   padding: 3rem;
 }
 
+.MuiNotchedOutline-focused-120 {
+  border-color: rgb(19, 143, 82) !important;
+}

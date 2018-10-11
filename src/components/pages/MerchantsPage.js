@@ -74,6 +74,8 @@ class MerchantsPage extends Component {
         skip: 0,
         data: []
       },
+      merchantsSearch: [],
+      ambassadorsMarkers: [],
       loading: true,
       rowsPerPage: [100,200,300],
       numberOfRows: 100,
@@ -94,7 +96,7 @@ class MerchantsPage extends Component {
    * @description Lifecycle event handler called just after the App loads into the DOM.
    */
   UNSAFE_componentWillMount() {
-    // Get the ambassadors list
+    this.getAmbassadors();
     this.getMerchants();
   }
 
@@ -104,11 +106,56 @@ class MerchantsPage extends Component {
   }
 
   /**
+   * @description Get ambassadors from the web service
+   * @param {number} [limit=10] - Max items to be returned.
+   * @param {number} [skip=0] - Start index search
+   */
+  getAmbassadors = async (limit = 50, skip = 0) => {
+    const app = this;
+    // Initially we don't know how much the total value is, so to make sure we enter the loop
+    // at least once we're just setting it to be 1
+    let total = 1;
+
+    const ambassadors = Client.service('api/v2/ambassadors');
+
+    let result;
+    while(skip < total){
+      let partialResponse = await ambassadors.find({
+        query: {
+          $sort: { account: 1 },
+          $limit: limit,
+          $skip: skip
+        }
+      });
+      total = partialResponse.total;
+      result === undefined ? result = partialResponse : partialResponse.data.map(this.fillResults(result));
+      skip = skip + limit;
+    }
+
+    const markers = [];
+    result.data.forEach(ambassador => {
+      ambassador.cities.forEach(function(city) {
+        const marker = {
+          lat: city.lat,
+          lng: city.lon,
+          withInfo: true,
+          infoTitle: ambassador.nickname,
+          infoDescription: `${city.name} - ${city.country}`,
+        };
+        markers.push(marker);
+      });
+    });
+
+    // Once both return, update the state
+    app.setState({ ambassadorsMarkers: markers });
+  };
+
+  /**
    * @description Get merchants from the web service
    * @param {number} [limit=10] - Max items to be returned.
    * @param {number} [skip=0] - Start index search
    */
-  getMerchants = async (limit = 10, skip = 0) => {
+  getMerchants = async (limit = 50, skip = 0) => {
     const app = this;
     // Initially we don't know how much the total value is, so to make sure we enter the loop
     // at least once we're just setting it to be 1
@@ -135,8 +182,31 @@ class MerchantsPage extends Component {
       if(merchants.country !== undefined) merchants.country = countries.getName(merchants.country);
     });
 
+    result.data.map(merchant => {
+      merchant.map = <Button
+        className="App-button"
+        variant="contained"
+        style={{
+            backgroundColor: "#139657",
+            color: 'white'
+        }}
+        onClick={() => this.openMaps(
+          merchant.name,
+          `${merchant.address}, ${merchant.city} - ${merchant.country}`,
+          merchant.lat,
+          merchant.lon
+        )}
+      >Show on Map
+      </Button>;
+      return merchant;
+    });
+
     // Once both return, update the state
-    app.setState({loading: false, merchants: result});
+    app.setState({
+      loading: false,
+      merchants: result,
+      merchantsSearch: result.data
+    });
   };
 
   /**
@@ -160,27 +230,25 @@ class MerchantsPage extends Component {
     });
   }
 
-  render() {
-    const { data } = this.state.merchants;
+  handleSearchChange(data){
+    this.setState({ merchantsSearch: data });
+  }
 
-    data.map(merchant => {
-      merchant.map = <Button
-        className="App-button"
-        variant="contained"
-        style={{
-            backgroundColor: "#139657",
-            color: 'white'
-        }}
-        onClick={() => this.openMaps(
-          merchant.name,
-          `${merchant.address}, ${merchant.city} - ${merchant.country}`,
-          merchant.lat,
-          merchant.lon
-        )}
-      >Show on Map
-      </Button>;
-      return merchant;
+  render() {
+    const { data: merchantsData } = this.state.merchants;
+    const { ambassadorsMarkers, merchantsSearch } = this.state;
+
+    const merchantMarkers = merchantsSearch.map(merchant => {
+      const marker = {
+        lat: merchant.lat,
+        lng: merchant.lon,
+        withInfo: true,
+        infoTitle: merchant.name,
+        infoDescription: `${merchant.address}, ${merchant.city} - ${merchant.country}`,
+      };
+      return marker;
     });
+
 
     return (
       <div>
@@ -223,16 +291,17 @@ class MerchantsPage extends Component {
               />
             </Modal>
 
-            {(data.length > 0) ? (
+            {(merchantsData.length > 0) ? (
               <div>
                 <br />
                 <EnhancedTable
                   columnData={columnData}
-                  data={data}
+                  data={merchantsData}
                   orderBy="account"
                   rowsPerPage={10}
                   showSearchColumns={false}
                   isAdmin={false}
+                  onSearchChange={(data) => this.handleSearchChange(data)}
                 />
               </div>
             ) : (
@@ -240,6 +309,8 @@ class MerchantsPage extends Component {
             )}
             <div className="map">
               <LayerMap
+                ambassadors={ambassadorsMarkers}
+                merchants={merchantMarkers}
                 ambassadorsLayer={false}
                 merchantsLayer={true}
                 mapHeight={'600px'}

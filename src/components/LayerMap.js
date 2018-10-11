@@ -15,7 +15,6 @@ import LayerMapSwitches from './LayerMapSwitches';
 
 // Helpers
 import GOOGLE_MAPS_API from '../utils/constants';
-import Client from '../utils/feathers';
 
 // Images
 import MerchantPin from '../assets/img/map/merchant_pin.png';
@@ -158,7 +157,9 @@ const propTypesLayerMap = {
   ambassadorsLayer: PropTypes.bool,
   merchantsLayer: PropTypes.bool,
   showControls: PropTypes.bool,
-  mapHeight: PropTypes.string
+  mapHeight: PropTypes.string,
+  ambassadors: PropTypes.array,
+  merchants: PropTypes.array,
 };
 
 class LayerMap extends Component {
@@ -172,86 +173,8 @@ class LayerMap extends Component {
     };
   }
 
-  /**
-   * @description Lifecycle event handler called just after the App loads into the DOM.
-   */
-  UNSAFE_componentWillMount() {
-    this.getAmbassadors();
-    this.getMerchants();
-  }
-
-  /**
-   * @description Get the ambassadors list from the web service.
-   * @param {string} id - Merchant ID.
-   */
-  getAmbassadors = () => {
-    const app = this;
-    const ambassadors = Client.service('api/v2/ambassadors');
-
-    this.setState({loading: true});
-
-    ambassadors.find().then( (results) => {
-      const markers = [];
-      results.data.forEach(ambassador => {
-        ambassador.cities.forEach(function(city) {
-          const marker = {
-            lat: city.lat,
-            lng: city.lon,
-            withInfo: true,
-            infoTitle: ambassador.nickname,
-            infoDescription: `${city.name} - ${city.country}`,
-          };
-          markers.push(marker);
-        });
-      });
-
-      // Once both return, update the state
-      app.setState({
-        ambassadors: markers,
-        loading: false
-      });
-    }).catch( error => {
-      app.setState({responseError: error.message, loading: false});
-    });
-  };
-
-  /**
-   * @description Get the merchants list from the web service.
-   * @param {string} id - Merchant ID.
-   */
-  getMerchants = () => {
-    const app = this;
-    const merchants = Client.service('api/v1/merchants');
-
-    this.setState({loading: true});
-
-    merchants.find().then( (results) => {
-      const markers = results.data.map(merchant => {
-        const marker = {
-          lat: merchant.lat,
-          lng: merchant.lon,
-          withInfo: true,
-          infoTitle: merchant.name,
-          infoDescription: `${merchant.address}, ${merchant.city} - ${merchant.country}`,
-        };
-        return marker;
-      });
-
-      // Once both return, update the state
-      app.setState({
-        merchants: markers,
-        loading: false
-      });
-    }).catch( error => {
-      app.setState({responseError: error.message, loading: false});
-    });
-  };
-
   handleLayerChange = name => event => {
     this.setState({ [name]: event.target.checked });
-    // Update any time changes
-    this.getAmbassadors();
-    this.getMerchants();
   };
 
   render() {
@@ -270,8 +193,8 @@ class LayerMap extends Component {
           <div style={{ height: 56 }}></div>
         )}
         <CustomLayerMap
-          ambassadors={this.state.ambassadorLayer ? this.state.ambassadors: []}
-          merchants={this.state.merchantLayer ? this.state.merchants: []}
+          ambassadors={this.state.ambassadorLayer ? this.props.ambassadors: []}
+          merchants={this.state.merchantLayer ? this.props.merchants: []}
           mapZoom={3}
           mapCenter={{ lat: 0, lng: 0 }}
           loadingElement={<div style={{ height: `100%` }} />}

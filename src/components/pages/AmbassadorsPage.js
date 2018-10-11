@@ -76,6 +76,8 @@ class AmbassadorsPage extends Component {
         skip: 0,
         data: []
       },
+      ambassadorsSearch: [],
+      merchantMarkers: [],
       loading: true,
       rowsPerPage: [100,200,300],
       numberOfRows: 100,
@@ -95,6 +97,7 @@ class AmbassadorsPage extends Component {
   UNSAFE_componentWillMount() {
     // Get the ambassadors list
     this.getAmbassadors();
+    this.getMerchants();
   }
 
   fillResults(result) {
@@ -129,8 +132,72 @@ class AmbassadorsPage extends Component {
       skip = skip + limit;
     }
 
+    // Add location and maps button
+    result.data.forEach(function(ambassador){
+      ambassador.location = {
+        searchText: app.addLocationSearchText(ambassador.cities),
+        value: app.addLocation(ambassador.cities)
+      }
+      ambassador.map = app.addMapButton(ambassador.nickname, ambassador.cities);
+      ambassador.link = <a target="_blank" rel="noopener noreferrer"
+        href={ambassador.url}>{stripProtocol(ambassador.url)}</a>;
+    });
+
     // Once both return, update the state
-    app.setState({loading: false, ambassadors: result});
+    app.setState({
+      loading: false,
+      ambassadors: result,
+      ambassadorsSearch: result.data
+    });
+  };
+
+  /**
+   * @description Get merchants from the web service
+   * @param {number} [limit=10] - Max items to be returned.
+   * @param {number} [skip=0] - Start index search
+   */
+  getMerchants = async (limit = 50, skip = 0) => {
+    const app = this;
+    // Initially we don't know how much the total value is, so to make sure we enter the loop
+    // at least once we're just setting it to be 1
+    let total = 1;
+
+    const merchants = Client.service('api/v1/merchants');
+
+    let result;
+    while(skip < total){
+      let partialResponse = await merchants.find({
+        query: {
+          $sort: { account: 1 },
+          $limit: limit,
+          $skip: skip
+        }
+      });
+      total = partialResponse.total;
+      result === undefined ? result = partialResponse : partialResponse.data.map(this.fillResults(result));
+      skip = skip + limit;
+    }
+
+    result.data.forEach(function(merchants){
+      if(merchants.city !== undefined) merchants.city = (merchants.city).replace(/(^|\s)\S/g, l => l.toUpperCase());
+      if(merchants.country !== undefined) merchants.country = countries.getName(merchants.country);
+    });
+
+    const markers = result.data.map(merchant => {
+      const marker = {
+        lat: merchant.lat,
+        lng: merchant.lon,
+        withInfo: true,
+        infoTitle: merchant.name,
+        infoDescription: `${merchant.address}, ${merchant.city} - ${merchant.country}`,
+      };
+      return marker;
+    });
+
+    // Once both return, update the state
+    app.setState({
+      merchantMarkers: markers
+    });
   };
 
   /**
@@ -206,20 +273,26 @@ class AmbassadorsPage extends Component {
     );
   }
 
+  handleSearchChange(data){
+    this.setState({ ambassadorsSearch: data });
+  }
+
   render() {
     const { data } = this.state.ambassadors;
+    const { ambassadorsSearch, merchantMarkers } = this.state;
 
-    const app = this;
-
-    // Add location and maps button
-    data.forEach(function(ambassador){
-      ambassador.location = {
-        searchText: app.addLocationSearchText(ambassador.cities),
-        value: app.addLocation(ambassador.cities)
-      }
-      ambassador.map = app.addMapButton(ambassador.nickname, ambassador.cities);
-      ambassador.link = <a target="_blank" rel="noopener noreferrer"
-        href={ambassador.url}>{stripProtocol(ambassador.url)}</a>;
+    const ambassadorsMarkers = [];
+    ambassadorsSearch.forEach(ambassador => {
+      ambassador.cities.forEach(function(city) {
+        const marker = {
+          lat: city.lat,
+          lng: city.lon,
+          withInfo: true,
+          infoTitle: ambassador.nickname,
+          infoDescription: `${city.name} - ${city.country}`,
+        };
+        ambassadorsMarkers.push(marker);
+      });
     });
 
     return (
@@ -274,6 +347,7 @@ class AmbassadorsPage extends Component {
                   showSearchColumns={false}
                   rowsPerPage={10}
                   isAdmin={false}
+                  onSearchChange={(data) => this.handleSearchChange(data)}
                 />
               </div>
             ) : (
@@ -281,6 +355,8 @@ class AmbassadorsPage extends Component {
             )}
             <div className="map">
               <LayerMap
+                ambassadors={ambassadorsMarkers}
+                merchants={merchantMarkers}
                 ambassadorsLayer={true}
                 merchantsLayer={false}
                 mapHeight={'600px'}

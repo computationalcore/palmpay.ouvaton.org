@@ -12,7 +12,7 @@ import LayerMap from '../LayerMap';
 import PreviewMap from '../PreviewMap';
 
 // Helpers
-import Client from '../../utils/feathers_merchants';
+import Client from '../../utils/feathers';
 import Countries from 'country-list';
 
 // Images

@@ -3,8 +3,7 @@ import feathers from '@feathersjs/client';
 const app = feathers();
 // Change to your production ambassador web service
 // const restClient = feathers.rest('http://localhost:3030');
-const restClient = feathers.rest('https://ambpay.palmpay.io');
-//const restClient = feathers.rest('https://palmpaybackend.leticiacamara.com');
+const restClient = feathers.rest('https://palmpaybackend.leticiacamara.com');
 
 // Configure an Fetch AJAX library with that client. For fetch details see https://facebook.github.io/react-native/docs/network.html
 // For rest details see https://docs.feathersjs.com/api/client/rest.html

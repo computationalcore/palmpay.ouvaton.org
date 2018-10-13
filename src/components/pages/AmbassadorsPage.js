@@ -124,7 +124,8 @@ class AmbassadorsPage extends Component {
         query: {
           $sort: { account: 1 },
           $limit: limit,
-          $skip: skip
+          $skip: skip,
+          disabled: false
         }
       });
       total = partialResponse.total;

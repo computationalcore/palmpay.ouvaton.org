@@ -233,23 +233,22 @@ class AmbassadorsPage extends Component {
 
   addLocation(cities){
     return (
-      <div>
-        <br /><br />
+      <span>
+        {(cities.length > 1) && (<span><br /></span>)}
         {cities.map((location, index) => (
-          <div key={index}>
+          <span key={index}>
             {`${(location.name).replace(/(^|\s)\S/g, l => l.toUpperCase())} - ${countries.getName(location.country)}`}
-            <br /><br /><br />
-          </div>
+            {(cities.length > 1) && (<span><br /><br /></span>)}
+          </span>
         ))}
-      </div>
+      </span>
     );
   }
 
   addMapButton(nickname, cities){
     const app = this;
     return (
-      <div>
-        <br />
+      <span>
         {cities.map((location, index) => (
           <div key={index}>
             <Button
@@ -257,7 +256,9 @@ class AmbassadorsPage extends Component {
               variant="contained"
               style={{
                   backgroundColor: "#2069b3",
-                  color: 'white'
+                  color: 'white',
+                  marginTop: 5,
+                  marginBottom: 5
               }}
               onClick={() => app.openMaps(
                 nickname,
@@ -267,10 +268,9 @@ class AmbassadorsPage extends Component {
               )}
             >Show on Map
             </Button>
-            <br /><br />
           </div>
         ))}
-      </div>
+      </span>
     );
   }
 

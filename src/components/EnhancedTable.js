@@ -144,6 +144,7 @@ class EnhancedTable extends Component {
     // If query is empty or undefined
     if (!query) {
       this.setState({searchQuery: ''});
+      this.props.onSearchChange(this.props.data);
       return;
     }
     // Update the search field as soon as the character is typed

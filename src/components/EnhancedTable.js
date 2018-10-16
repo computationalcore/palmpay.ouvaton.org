@@ -42,7 +42,6 @@ const propTypes = {
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
   onMultipleDelete: PropTypes.func,
-
 };
 
 /**
@@ -142,14 +141,46 @@ class EnhancedTable extends Component {
    * @param {string} query - The search term.
    */
   updateQuery = (query) => {
-    query = query.trim();
     // If query is empty or undefined
     if (!query) {
       this.setState({searchQuery: ''});
+      this.props.onSearchChange(this.props.data);
       return;
     }
     // Update the search field as soon as the character is typed
     this.setState({searchQuery: query});
+
+    const searchQuery = query;
+    const searchColumns = this.state.searchColumns;
+    const data = this.props.data.filter((item) => {
+      let insert = false;
+
+        // Iterate over the search column select boxes
+        searchColumns.map(column => {
+          try {
+            if( column.checked && (item[column.name] !== undefined) ) {
+
+              if(item[column.name].hasOwnProperty('searchText') && item[column.name].searchText.toLowerCase().indexOf(searchQuery.toLowerCase().trim()) !== -1){
+                insert = true;
+              }
+              else if(item[column.name].toLowerCase().indexOf(searchQuery.toLowerCase().trim()) !== -1){
+                insert = true;
+              }
+            }
+          }
+          catch(error) {
+            //console.error(error);
+          }
+          return column;
+        });
+
+      if(insert){
+        return item;
+      }
+      return false;
+    });
+
+    this.props.onSearchChange(data);
   };
 
   /*
@@ -177,10 +208,14 @@ class EnhancedTable extends Component {
           // Iterate over the search column select boxes
           searchColumns.map(column => {
             try {
-              if( column.checked &&
-                  (item[column.name] !== undefined) &&
-                  ((item[column.name].toLowerCase()).indexOf(searchQuery.toLowerCase()) !== -1) ){
-                insert = true;
+              if( column.checked && (item[column.name] !== undefined) ) {
+
+                if(item[column.name].hasOwnProperty('searchText') && item[column.name].searchText.toLowerCase().indexOf(searchQuery.toLowerCase().trim()) !== -1){
+                  insert = true;
+                }
+                else if(item[column.name].toLowerCase().indexOf(searchQuery.toLowerCase().trim()) !== -1){
+                  insert = true;
+                }
               }
             }
             catch(error) {
@@ -195,6 +230,8 @@ class EnhancedTable extends Component {
         return false;
       });
     }
+
+
 
     return (
       <div style={styles.root}>
@@ -238,8 +275,14 @@ class EnhancedTable extends Component {
                         key={this.props.name + '-data-' + column.id}
                         component="th" scope="row" padding="none"
                         style={{margin: 'auto 0', textAlign: 'center', padding: 0}}
-                      >
-                        {n[column.id]}
+                      >{
+                          ((n[column.id]) !== undefined && (n[column.id]) !== null) ?
+                            ( (n[column.id]).hasOwnProperty('value') ?
+                              n[column.id].value : n[column.id]
+                            )
+                          :
+                          n[column.id]
+                        }
                       </TableCell>
                       ))}
                     {this.props.isAdmin &&

@@ -117,22 +117,6 @@ function Footer() {
               <div
                 style={{ fontSize: "0.8em" }}
                 className="text-white col-md-2">
-                <small>
-                  Site by:
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://about.me/poqdavid">
-                    poqdavid
-                  </a>
-                  {" "} & {" "}
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="http://leticiacamara.com">
-                    Leticia Camara
-                  </a>
-                </small>
               </div>
             </div>
 

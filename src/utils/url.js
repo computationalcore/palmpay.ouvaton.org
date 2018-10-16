@@ -7,10 +7,12 @@ function addProtocol(url, protocol) {
 }
 
 function stripProtocol(url){
+  if(!url) return '';
   return url.replace(/(^\w+:|^)\/\//, '');
 }
 
 function getProtocol(url){
+  if(!url) return '';
   const values = url.match(/(^\w+:|^)\/\//);
 
   return values && (values.length > 0) ? values[0] : '';

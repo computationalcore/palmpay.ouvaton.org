@@ -360,8 +360,28 @@ ul.social-buttons {
 }
 .ambassadorsTitle {
   margin-top: 0 !important;
+  margin-left: -97px;
 }
 .about.bg-secondary > div {
   padding-left: 0 !important;
   padding-right: 0 !important;
+}
+.ambassadorsTitle {
+  margin-top: 0 !important;
+}
+
+@media screen and (min-width: 328px) {
+  .ambassadorsTitle {
+    margin-left: -97px;
+  }
+  .marketingMargin {
+    margin-left: -147px !important;
+  }
+  .merchantsMargin {
+    margin-left: -150px !important;
+  }
+}
+
+th {
+  text-align: left !important;
 }

@@ -259,7 +259,7 @@ class MerchantsPage extends Component {
       <div className="row">
       <div className="col-md-10 mx-md-auto">
 
-        <h2 className="ambassadorsTitle" style={centerStyle}><FormattedMessage id="merchants.title" /></h2>
+        <h2 className="ambassadorsTitle merchantsMargin" style={centerStyle}><FormattedMessage id="merchants.title" /></h2>
         { /* Conditional Rendering */}
             {(this.state.loading) ? (
               <img src={LoadingGif} alt="Loading" style={loadingStyle} />

@@ -6,6 +6,12 @@ import { FormattedMessage, FormattedHTMLMessage } from 'react-intl';
 import AppHeader from '../AppHeader';
 import Footer from '../Footer';
 
+const centerStyle = {
+  textAlign: 'center',
+  marginTop: 20,
+  marginBottom: 20
+};
+
 /**
  * Marketing page component.
  */
@@ -109,6 +115,7 @@ class MarketingPage extends React.Component {
       <div className="containerfix">
       <div className="row">
       <div className="col-md-10 mx-md-auto">
+        <h2 className="ambassadorsTitle marketingMargin" style={centerStyle}>Marketing</h2>
       <div>
       <div>
       <Button

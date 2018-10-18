@@ -88,7 +88,7 @@ class LayerMapSwitches extends React.Component {
                 onChange={this.props.onChange('ambassadorLayer')}
                 value="ambassadors"
                 classes={{
-                  switchBase: ( (this.props.ambsMap) ? classes.iOSSwitchBaseBlue : classes.iOSSwitchBaseGreen ),
+                  switchBase: classes.iOSSwitchBaseBlue,
                   bar: classes.iOSBar,
                   icon: classes.iOSIcon,
                   iconChecked: classes.iOSIconChecked,
@@ -102,7 +102,7 @@ class LayerMapSwitches extends React.Component {
             control={
               <Switch
                 classes={{
-                  switchBase: ( (this.props.ambsMap) ? classes.iOSSwitchBaseBlue : classes.iOSSwitchBaseGreen ),
+                  switchBase: classes.iOSSwitchBaseGreen,
                   bar: classes.iOSBar,
                   icon: classes.iOSIcon,
                   iconChecked: classes.iOSIconChecked,

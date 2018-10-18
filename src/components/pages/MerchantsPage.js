@@ -182,6 +182,10 @@ class MerchantsPage extends Component {
     });
 
     result.data.map(merchant => {
+      const infoDescription = <div>
+        <div><b>Address</b>: {merchant.address}</div>
+        {(merchant.phone) && (<div><b>Phone</b>: {merchant.phone}</div>)}
+        </div>;
       merchant.map = <Button
         className="App-button"
         variant="contained"
@@ -191,7 +195,7 @@ class MerchantsPage extends Component {
         }}
         onClick={() => this.openMaps(
           merchant.name,
-          `${merchant.address}, ${merchant.city} - ${merchant.country}`,
+          infoDescription,
           merchant.lat,
           merchant.lon
         )}
@@ -238,12 +242,16 @@ class MerchantsPage extends Component {
     const { ambassadorsMarkers, merchantsSearch } = this.state;
 
     const merchantMarkers = merchantsSearch.map(merchant => {
+      const infoDescription = <div>
+      <div><b>Address</b>: {merchant.address}</div>
+      {(merchant.phone) && (<div><b>Phone</b>: {merchant.phone}</div>)}
+      </div>;
       const marker = {
         lat: merchant.lat,
         lng: merchant.lon,
         withInfo: true,
         infoTitle: merchant.name,
-        infoDescription: `${merchant.address}, ${merchant.city} - ${merchant.country}`,
+        infoDescription: infoDescription,
       };
       return marker;
     });

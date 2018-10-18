@@ -184,12 +184,16 @@ class AmbassadorsPage extends Component {
     });
 
     const markers = result.data.map(merchant => {
+      const infoDescription = <div>
+      <div><b>Address</b>: {merchant.address}</div>
+      {(merchant.phone) && (<div><b>Phone</b>: {merchant.phone}</div>)}
+      </div>;
       const marker = {
         lat: merchant.lat,
         lng: merchant.lon,
         withInfo: true,
         infoTitle: merchant.name,
-        infoDescription: `${merchant.address}, ${merchant.city} - ${merchant.country}`,
+        infoDescription: infoDescription,
       };
       return marker;
     });

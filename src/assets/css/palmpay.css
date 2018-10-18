@@ -360,7 +360,6 @@ ul.social-buttons {
 }
 .ambassadorsTitle {
   margin-top: 0 !important;
-  margin-left: -97px;
 }
 .about.bg-secondary > div {
   padding-left: 0 !important;
@@ -372,16 +371,29 @@ ul.social-buttons {
 
 @media screen and (min-width: 328px) {
   .ambassadorsTitle {
-    margin-left: -97px;
+    font-weight: bold;
   }
   .marketingMargin {
-    margin-left: -147px !important;
+    font-weight: bold;
   }
   .merchantsMargin {
-    margin-left: -150px !important;
+    font-weight: bold;
   }
 }
 
 th {
   text-align: left !important;
+}
+
+#mainNav p {
+  margin-left: 0 !important;
+
+}
+
+header .col-md-10, header .col-md-10 > div {
+  padding-left: 0 !important;
+}
+
+.search-books-input-wrapper > div {
+  margin-left: 0 !important;
 }

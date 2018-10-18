@@ -25,7 +25,6 @@ import "./MerchantsPage.css";
 const countries = Countries();
 
 const centerStyle = {
-  textAlign: 'center',
   marginTop: 20,
   marginBottom: 20
 };
@@ -265,7 +264,7 @@ class MerchantsPage extends Component {
               <img src={LoadingGif} alt="Loading" style={loadingStyle} />
         ): (
           <div>
-            <p style={{ textAlign: 'left', marginLeft: 20, marginRight: 20 }}>
+            <p style={{ textAlign: 'left', marginRight: 20 }}>
               <FormattedHTMLMessage id="merchants.description1" />
               <Link to="/ambs">
                 <FormattedMessage id="merchants.ambassadors_link_description" />

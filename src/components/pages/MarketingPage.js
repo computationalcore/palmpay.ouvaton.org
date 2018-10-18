@@ -7,7 +7,6 @@ import AppHeader from '../AppHeader';
 import Footer from '../Footer';
 
 const centerStyle = {
-  textAlign: 'center',
   marginTop: 20,
   marginBottom: 20
 };

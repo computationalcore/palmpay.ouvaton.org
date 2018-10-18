@@ -14,13 +14,15 @@ import AppLogo from '../assets/img/header/logo.png';
 function AppHeader() {
   return (
     <AppBar position="static" color="inherit" style={{backgroundColor: '#138F52'}}>
+  <div className="col-md-10 mx-md-auto" >
       <Toolbar>
-        <Typography style={{margin: '0 auto'}} variant="title" color="inherit">
+        <Typography variant="title" color="inherit">
           <Link to="/">
             <img src={AppLogo} className="app-book-menu-remove-icon" alt="Palmpay logo" />
           </Link>
         </Typography>
       </Toolbar>
+    </div>
     </AppBar>
   );
 }

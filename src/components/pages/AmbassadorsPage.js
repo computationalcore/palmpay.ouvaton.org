@@ -24,7 +24,6 @@ import LoadingGif from '../../assets/img/loading_icon.gif';
 const countries = Countries();
 
 const centerStyle = {
-  textAlign: 'center',
   marginTop: 20,
   marginBottom: 20
 };
@@ -313,7 +312,7 @@ class AmbassadorsPage extends Component {
               <img src={LoadingGif} alt="Loading" style={loadingStyle} />
         ): (
           <div>
-            <p style={{ textAlign: 'left', marginLeft: 20, marginRight: 20 }}>
+            <p style={{ textAlign: 'left', marginRight: 20 }}>
               <FormattedHTMLMessage id="ambassadors.description1" />
               <Link to="/merchants">
                 <FormattedMessage id="ambassadors.merchants_link_description" />

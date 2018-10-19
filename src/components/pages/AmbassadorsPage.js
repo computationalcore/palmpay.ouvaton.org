@@ -138,7 +138,7 @@ class AmbassadorsPage extends Component {
         searchText: app.addLocationSearchText(ambassador.cities),
         value: app.addLocation(ambassador.cities)
       }
-      ambassador.map = app.addMapButton(ambassador.nickname, ambassador.cities);
+      ambassador.map = app.addMapButton(ambassador, ambassador.cities);
       ambassador.link = <a target="_blank" rel="noopener noreferrer"
         href={ambassador.url}>{stripProtocol(ambassador.url)}</a>;
     });
@@ -248,11 +248,22 @@ class AmbassadorsPage extends Component {
     );
   }
 
-  addMapButton(nickname, cities){
+  addMapButton(ambassador, cities){
     const app = this;
     return (
       <span>
-        {cities.map((location, index) => (
+        {cities.map((location, index) => {
+          const infoDescription = <div>
+          <div><b>Location</b>: {(location.name).replace(/(^|\s)\S/g, l => l.toUpperCase())} - {countries.getName(location.country)}</div>
+          {(ambassador.nickname) && (<div><b>Nickname</b>: {ambassador.nickname}</div>)}
+          {(ambassador.telegram) && (<div><b>Telegram</b>: {ambassador.telegram}</div>)}
+          {(ambassador.keybase) && (<div><b>Keybase</b>: {ambassador.keybase}</div>)}
+          {(ambassador.email) && (<div><b>Email</b>: {ambassador.email}</div>)}
+          {(ambassador.phone) && (<div><b>Phone</b>: {ambassador.phone}</div>)}
+          {(ambassador.url) && (<div><b>URL:</b>: <a target="_blank" rel="noopener noreferrer"
+            href={ambassador.url}>{stripProtocol(ambassador.url)}</a></div>)}
+          </div>;
+          return (
           <div key={index}>
             <Button
               className="App-button"
@@ -264,15 +275,15 @@ class AmbassadorsPage extends Component {
                   marginBottom: 5
               }}
               onClick={() => app.openMaps(
-                nickname,
-                `${(location.name).replace(/(^|\s)\S/g, l => l.toUpperCase())} - ${countries.getName(location.country)}`,
+                ambassador.nickname,
+                infoDescription,
                 location.lat,
                 location.lon
               )}
             >Show on Map
             </Button>
           </div>
-        ))}
+        );})}
       </span>
     );
   }
@@ -288,12 +299,22 @@ class AmbassadorsPage extends Component {
     const ambassadorsMarkers = [];
     ambassadorsSearch.forEach(ambassador => {
       ambassador.cities.forEach(function(city) {
+        const infoDescription = <div>
+        <div><b>Location</b>: {(city.name).replace(/(^|\s)\S/g, l => l.toUpperCase())} - {countries.getName(city.country)}</div>
+        {(ambassador.nickname) && (<div><b>Nickname</b>: {ambassador.nickname}</div>)}
+        {(ambassador.telegram) && (<div><b>Telegram</b>: {ambassador.telegram}</div>)}
+        {(ambassador.keybase) && (<div><b>Keybase</b>: {ambassador.keybase}</div>)}
+        {(ambassador.email) && (<div><b>Email</b>: {ambassador.email}</div>)}
+        {(ambassador.phone) && (<div><b>Phone</b>: {ambassador.phone}</div>)}
+        {(ambassador.url) && (<div><b>URL:</b>: <a target="_blank" rel="noopener noreferrer"
+          href={ambassador.url}>{stripProtocol(ambassador.url)}</a></div>)}
+        </div>;
         const marker = {
           lat: city.lat,
           lng: city.lon,
           withInfo: true,
           infoTitle: ambassador.nickname,
-          infoDescription: `${city.name} - ${city.country}`,
+          infoDescription: infoDescription,
         };
         ambassadorsMarkers.push(marker);
       });

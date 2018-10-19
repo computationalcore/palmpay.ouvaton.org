@@ -10,6 +10,7 @@ import EnhancedTable from '../EnhancedTable';
 import Footer from '../Footer';
 import LayerMap from '../LayerMap';
 import PreviewMap from '../PreviewMap';
+import { stripProtocol } from '../../utils/url';
 
 // Helpers
 import Client from '../../utils/feathers';
@@ -134,12 +135,22 @@ class MerchantsPage extends Component {
     const markers = [];
     result.data.forEach(ambassador => {
       ambassador.cities.forEach(function(city) {
+        const infoDescription = <div>
+        <div><b>Location</b>: {(city.name).replace(/(^|\s)\S/g, l => l.toUpperCase())} - {countries.getName(city.country)}</div>
+        {(ambassador.nickname) && (<div><b>Nickname</b>: {ambassador.nickname}</div>)}
+        {(ambassador.telegram) && (<div><b>Telegram</b>: {ambassador.telegram}</div>)}
+        {(ambassador.keybase) && (<div><b>Keybase</b>: {ambassador.keybase}</div>)}
+        {(ambassador.email) && (<div><b>Email</b>: {ambassador.email}</div>)}
+        {(ambassador.phone) && (<div><b>Phone</b>: {ambassador.phone}</div>)}
+        {(ambassador.url) && (<div><b>URL:</b>: <a target="_blank" rel="noopener noreferrer"
+          href={ambassador.url}>{stripProtocol(ambassador.url)}</a></div>)}
+        </div>;
         const marker = {
           lat: city.lat,
           lng: city.lon,
           withInfo: true,
           infoTitle: ambassador.nickname,
-          infoDescription: `${city.name} - ${city.country}`,
+          infoDescription: infoDescription,
         };
         markers.push(marker);
       });

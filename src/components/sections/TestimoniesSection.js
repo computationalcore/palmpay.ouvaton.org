@@ -68,7 +68,7 @@ class TestimoniesSection extends React.Component {
   render() {
     const { activeItem, maxLength } = this.state;
 
-    const fontSize = (this.state.width > 1000) ? 16 * (1 + (this.state.width/2000)): 16;
+    const fontSize = (this.state.width > 1000) ? 16 * (1 + (this.state.width/4000)): 16;
 
     return (
       <span>
